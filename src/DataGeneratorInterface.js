@@ -7,7 +7,11 @@ export default class DataGeneratorInterface {
    * serviceRegistry my be left empty
    */
   constructor(
-    serviceRegistry = {},
+    serviceRegistry = {
+      getGenerator: () => {
+        throw new Error('No service registry definend')
+      },
+    },
     args = { unique: true, maxUniqueTries: 100 }
   ) {
     this.serviceRegistry = serviceRegistry
@@ -24,6 +28,20 @@ export default class DataGeneratorInterface {
     this.uniqueSet = new Set()
 
     this.instanceData = new Map()
+  }
+
+  /**
+   * Returns the Datagenerator registered under the given name. If the generator is not found an error will be thrown
+   * @param serviceName {string} The name of the registered data generator
+   * @returns generator {object} The generator
+   */
+  getGenerator(generatorName) {
+    const gen = this.serviceRegistry.getGenerator(generatorName)
+    if (!gen) {
+      throw new Error(
+        `The generator with the name '${generatorName}' was not registered in the registry`
+      )
+    }
   }
 
   /**

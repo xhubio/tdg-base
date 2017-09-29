@@ -1,6 +1,6 @@
 'use strict'
 
-import TDGServiceRegistry from '../lib/TDGServiceRegistry'
+import { TDGServiceRegistry } from '../lib/index'
 
 test('Test that registerGenerator could be retrieved', () => {
   const registry = new TDGServiceRegistry()

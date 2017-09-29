@@ -1,6 +1,6 @@
 'use strict'
 
-export default class DataGenerator {
+export default class DataGeneratorInterface {
   /**
    * The service registry is used to make data generators available to other
    * generators. If a generator does not need access to other generators the
@@ -20,6 +20,10 @@ export default class DataGenerator {
     this.maxUniqueTries = args.maxUniqueTries
 
     this.context = {}
+
+    this.uniqueSet = new Set()
+
+    this.instanceData = new Map()
   }
 
   /**
@@ -28,6 +32,8 @@ export default class DataGenerator {
    */
   clearContext() {
     this.context = {}
+    this.uniqueSet = new Set()
+    this.instanceData = new Map()
   }
 
   /**

@@ -21,7 +21,7 @@ before_script:
 - npm prune
 - npm install -g codecov
 script:
-- npm run-script cover
+- npm run test
 after_script:
 - codecov
 after_success:

@@ -23,8 +23,6 @@ export default class DataGeneratorInterface {
     // defines how many tries the generator will do for getting a unique value until it throws an error
     this.maxUniqueTries = args.maxUniqueTries
 
-    this.context = {}
-
     this.uniqueSet = new Set()
 
     this.instanceData = new Map()
@@ -37,11 +35,12 @@ export default class DataGeneratorInterface {
    */
   getGenerator(generatorName) {
     const gen = this.serviceRegistry.getGenerator(generatorName)
-    if (!gen) {
+    if (!gen || gen === undefined) {
       throw new Error(
         `The generator with the name '${generatorName}' was not registered in the registry`
       )
     }
+    return gen
   }
 
   /**
@@ -49,13 +48,12 @@ export default class DataGeneratorInterface {
    * also to check if data is unique.
    */
   clearContext() {
-    this.context = {}
     this.uniqueSet = new Set()
     this.instanceData = new Map()
   }
 
   /**
-   * Generates the value
+   * Generates the value and saves it for the given instance
    * @param instanceId {string} The testcase instance id. for the same instance id the same data object
    * will be returned. If this i undefined then always a new value will be created.
    * @param data {object} The already generated data/object tree.
@@ -65,12 +63,30 @@ export default class DataGeneratorInterface {
    * needs referenced data which is not generated yet.
    */
   // eslint-disable-next-line no-unused-vars
-  generate(instanceId, data, args) {}
+  generate(instanceId, data, args) {
+    if (instanceId && this.instanceData.has(instanceId)) {
+      return this.instanceData.get(instanceId)
+    }
+
+    const genData = this._doGenerate(instanceId, data, args)
+
+    if (instanceId) {
+      this.instanceData.set(instanceId, genData)
+    }
+
+    return genData
+  }
+
+  /**
+   * @see  generate
+   */
+  // eslint-disable-next-line no-unused-vars
+  _doGenerate(instanceId, data, args) {}
 
   /**
    * Returns the context of this generator. So you have the complete data generated
    */
   getModel() {
-    return this.context
+    return this.instanceData
   }
 }

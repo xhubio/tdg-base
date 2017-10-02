@@ -29,11 +29,13 @@ export default class TDGServiceRegistry {
 
   getGenerator(serviceName) {
     assert.ok(serviceName)
+
     if (!this.services.has(serviceName)) {
       throw new Error(
         `There was no generator registered with the name '${serviceName}'`
       )
     }
+
     return this.services.get(serviceName)
   }
 }
